@@ -37,7 +37,8 @@ export interface PrologueCallbacks {
   fade: (to: 'black' | 'white' | 'clear', ms: number) => Promise<void>;
 }
 
-const START = { x: -0.6, z: 4.2, yaw: 0.35 };
+// Wake up beside the road, facing the car and its blinking hazard lights.
+const START = { x: -0.6, z: 4.2, yaw: -0.22 };
 
 const RADIO_BROADCAST: SubtitleLine[] = [
   { text: '(Estática. Um chiado longo.)', duration: 2.6 },

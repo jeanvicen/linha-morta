@@ -388,8 +388,10 @@ export class App {
 
   /** Audio can only start after a user gesture; the first interaction anywhere unlocks it. */
   private setupAudioUnlock(): void {
-    const unlock = (): void => {
+    const unlock = (event: Event): void => {
       if (this.audio.state !== 'locked') return;
+      // The sound toggle handles its own click; unlocking here too would immediately mute it again.
+      if ((event.target as HTMLElement | null)?.closest?.('[data-sound-toggle]')) return;
       void this.audio.unlock().then((ok) => {
         if (ok) this.audio.setScene(this.mode === 'loading' ? 'loading' : this.mode === 'game' ? 'game' : 'menu');
       });
@@ -491,7 +493,7 @@ export class App {
     this.audio.setScene('chapter');
     this.chapter.configure({
       canPlay: this.webgl && this.mode === 'menu',
-      touch: this.device.touch && this.device.mobile,
+      touch: this.useTouchControls(),
       resume,
       onStart: () => void this.beginGame(resume !== null),
       onBack: () => {
@@ -527,7 +529,7 @@ export class App {
           onOpenDonate: () => this.screens.open(this.donate),
           fade: (to, ms) => this.fade(to, ms),
         },
-        this.device.touch && this.device.mobile,
+        this.useTouchControls(),
       );
       this.ui.append(this.game.hud.root);
       this.gameScreen = new GameScreen(this.game.hud.root, () => this.openPause());
@@ -538,6 +540,12 @@ export class App {
     this.screens.setGamepadEnabled(false);
     await wait(300);
     await this.fade('clear', 1400);
+  }
+
+  /** Touch controls for phones and tablets (coarse pointer), keyboard/mouse otherwise. */
+  private useTouchControls(): boolean {
+    const coarse = window.matchMedia?.('(pointer: coarse)').matches ?? false;
+    return this.device.touch && (this.device.mobile || coarse);
   }
 
   private openPause(): void {

@@ -40,7 +40,7 @@ export class MainMenu extends Screen {
     this.continueBtn = item('Continuar', actions.continueGame, this.continueNote);
     this.continueBtn.setAttribute('aria-describedby', 'continue-note');
 
-    this.soundChip = h('button', { type: 'button', class: 'chip', 'aria-pressed': 'false' }) as HTMLButtonElement;
+    this.soundChip = h('button', { type: 'button', class: 'chip', 'aria-pressed': 'false', 'data-sound-toggle': 'true' }) as HTMLButtonElement;
     this.soundChip.addEventListener('click', () => actions.toggleSound());
     this.installChip = h('button', { type: 'button', class: 'chip', hidden: true }, icon('install', 18), h('span', {}, 'Instalar')) as HTMLButtonElement;
     this.installChip.addEventListener('click', () => actions.install());
