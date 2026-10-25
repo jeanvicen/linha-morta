@@ -22,6 +22,8 @@ interface Interactable {
   id: string;
   position: Vector3;
   radius: number;
+  /** Optional closest point on a larger object (e.g. the car body), so it can be used from any side. */
+  closest?: (from: Vector3, out: Vector3) => Vector3;
   label: () => string | null;
   use: () => void;
 }
@@ -56,6 +58,7 @@ export class Prologue {
   private readonly boxes: BoxCollider[] = [];
   private readonly tmpV = new Vector3();
   private readonly tmpF = new Vector3();
+  private readonly tmpTarget = new Vector3();
   private readonly flashPos = new Vector3();
   private readonly flashDir = new Vector3(0, 0, -1);
   private readonly lookScaled = new Vector2();
@@ -105,12 +108,17 @@ export class Prologue {
 
   private buildInteractables(): void {
     const car = this.world.car.group;
-    // Driver's door (left side of the car in its local frame).
-    const door = new Vector3(-0.35, 0, -1.25).applyMatrix4(car.matrixWorld);
+    const local = new Vector3();
     this.interactables.push({
       id: 'car',
-      position: door,
-      radius: 2.3,
+      position: car.position.clone(),
+      radius: 1.6,
+      // Doors on both sides: measure from the closest point of the body, in the car's frame.
+      closest: (from, out) => {
+        car.worldToLocal(local.copy(from));
+        local.set(Math.min(1.9, Math.max(-2.0, local.x)), 0.8, Math.min(0.82, Math.max(-0.82, local.z)));
+        return out.copy(local).applyMatrix4(car.matrixWorld);
+      },
       label: () => {
         if (!this.inventory.has('flashlight')) return 'Abrir o porta-luvas';
         if (!this.radioOn && this.checkpoint === 'flashlight') return 'Ligar o rádio';
@@ -393,13 +401,14 @@ export class Prologue {
     let best: Interactable | null = null;
     let bestScore = Infinity;
     for (const item of this.interactables) {
-      this.tmpV.subVectors(item.position, eye);
+      const target = item.closest ? item.closest(eye, this.tmpTarget) : item.position;
+      this.tmpV.subVectors(target, eye);
       const flat = Math.hypot(this.tmpV.x, this.tmpV.z);
       if (flat > item.radius) continue;
       this.tmpV.y = 0;
       this.tmpV.normalize();
       const facing = this.tmpV.x * this.tmpF.x + this.tmpV.z * this.tmpF.z;
-      if (facing < 0.35) continue;
+      if (facing < (item.closest ? 0.15 : 0.35)) continue;
       const score = flat * (1.6 - facing);
       if (score < bestScore) {
         bestScore = score;

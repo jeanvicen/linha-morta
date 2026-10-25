@@ -27,6 +27,7 @@ import {
   type Texture,
 } from 'three';
 import { mergeVertices, toCreasedNormals } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { createRng, smoothstep } from '../core/math';
 import { ctx2d, makeCanvas, toTexture } from './procedural/textures';
 import { NO_REFLECT_LAYER } from '../render/PlanarReflection';
@@ -434,7 +435,7 @@ export class AbandonedCar {
     this.disposables.push(paint, plastic, chrome, rubber, rim, mask1, mask2, crack);
 
     // Bumpers.
-    const bumperGeo = new BoxGeometry(0.16, 0.22, 1.66);
+    const bumperGeo = new RoundedBoxGeometry(0.16, 0.22, 1.66, 3, 0.05);
     const front = new Mesh(bumperGeo, plastic);
     front.position.set(-2.02, 0.46, -0.02);
     front.rotation.y = 0.05;
@@ -451,7 +452,7 @@ export class AbandonedCar {
     this.taillightMaterial = new MeshStandardMaterial({ color: '#3a0505', emissive: '#ff1a0a', emissiveIntensity: 0.35, roughness: 0.25 });
     this.hazardMaterial = new MeshStandardMaterial({ color: '#40260a', emissive: '#ff8a1c', emissiveIntensity: 0, roughness: 0.25 });
     this.disposables.push(this.headlightMaterial, deadLight, this.taillightMaterial, this.hazardMaterial);
-    const lensGeo = new BoxGeometry(0.04, 0.14, 0.34);
+    const lensGeo = new RoundedBoxGeometry(0.04, 0.14, 0.34, 2, 0.015);
     const headL = new Mesh(lensGeo, this.headlightMaterial);
     headL.position.set(-2.07, 0.665, -0.47);
     const headR = new Mesh(lensGeo, deadLight);
@@ -459,17 +460,17 @@ export class AbandonedCar {
     headR.rotation.set(0.1, 0.25, 0.08);
     const grille = new Mesh(new BoxGeometry(0.03, 0.12, 0.5), plastic);
     grille.position.set(-2.06, 0.66, -0.02);
-    const sigGeo = new BoxGeometry(0.05, 0.1, 0.12);
+    const sigGeo = new RoundedBoxGeometry(0.05, 0.1, 0.12, 2, 0.015);
     const sigFL = new Mesh(sigGeo, this.hazardMaterial);
     sigFL.position.set(-2.05, 0.665, -0.73);
     const sigFR = new Mesh(sigGeo, this.hazardMaterial);
     sigFR.position.set(-1.9, 0.66, 0.66);
-    const tailGeo = new BoxGeometry(0.04, 0.2, 0.3);
+    const tailGeo = new RoundedBoxGeometry(0.04, 0.2, 0.3, 2, 0.015);
     const tailL = new Mesh(tailGeo, this.taillightMaterial);
     tailL.position.set(1.955, 0.76, -0.55);
     const tailR = tailL.clone();
     tailR.position.z = 0.55;
-    const ambGeo = new BoxGeometry(0.045, 0.2, 0.1);
+    const ambGeo = new RoundedBoxGeometry(0.045, 0.2, 0.1, 2, 0.015);
     const ambL = new Mesh(ambGeo, this.hazardMaterial);
     ambL.position.set(1.955, 0.76, -0.75);
     const ambR = ambL.clone();
@@ -490,7 +491,7 @@ export class AbandonedCar {
     this.group.add(plateF, plateR);
 
     // Mirrors and wipers.
-    const mirrorGeo = new BoxGeometry(0.12, 0.1, 0.16);
+    const mirrorGeo = new RoundedBoxGeometry(0.12, 0.1, 0.16, 2, 0.03);
     for (const side of [-1, 1]) {
       const m = new Mesh(mirrorGeo, plastic);
       m.position.set(-0.82, 0.98, side * 0.86);
