@@ -44,8 +44,10 @@ export class SettingsStore extends Emitter<SettingsEvents> {
   /** Graphics values actually used by the renderer. */
   get graphics(): GraphicsSettings {
     const g = this.current.graphics;
-    if (g.preset !== 'auto') return g;
-    return { ...g, ...QUALITY_PRESETS[this.autoLevel] };
+    if (g.preset === 'custom') return g;
+    // Named presets are authoritative, so stale or partial stored details never leak through.
+    const level = g.preset === 'auto' ? this.autoLevel : g.preset;
+    return { ...g, ...QUALITY_PRESETS[level] };
   }
 
   setAutoLevel(level: QualityLevel): void {

@@ -193,7 +193,7 @@ export class App {
           this.render.onViewport((w, hgt) => this.rig?.setViewport(w, hgt));
           this.render.addUpdater((dt, time) => {
             this.rig?.update(dt, time);
-            if (this.mode === 'menu') this.screens.pollGamepad(performance.now());
+            if (this.mode === 'menu' || (this.mode === 'game' && this.screens.hasOverlay)) this.screens.pollGamepad(performance.now());
           });
           this.render.on('autodowngrade', (lvl) => {
             this.autoLevel = lvl;
@@ -330,8 +330,11 @@ export class App {
       this.applyAccessibility(this.settings.value);
       this.toasts.show('Cenário restaurado.');
       if (this.game) {
-        // The prologue holds references to the old world; return to the menu safely.
+        // The prologue holds references to the old world: save, return to the menu and recreate it later.
         await this.exitGame(true);
+        this.game.hud.root.remove();
+        this.game = null;
+        this.gameScreen = null;
       }
     } catch (error) {
       console.error('[render] failed to rebuild after context loss', error);
@@ -506,6 +509,8 @@ export class App {
     if (!resume) this.saves.clear();
     await this.fade('black', 900);
     this.screens.close(this.chapter);
+    // Hold the black for a moment (only rain is heard) while the title card finishes fading out.
+    await wait(document.documentElement.classList.contains('reduced-motion') ? 0 : 1250);
     this.mode = 'game';
     this.rig.active = false;
     if (!this.game) {

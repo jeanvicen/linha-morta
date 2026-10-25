@@ -55,6 +55,11 @@
   box-sizing: border-box;
 }
 
+/* Component display rules must never override the hidden attribute. */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -546,6 +551,16 @@ a {
   transition: opacity var(--t-slow) var(--ease), visibility 0s;
 }
 
+.menu.is-covered {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay.is-covered {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .menu__brand {
   margin-bottom: clamp(1.8rem, 5vh, 3.2rem);
 }
@@ -812,6 +827,12 @@ a {
 .overlay--side .panel {
   width: min(720px, 100%);
   margin-left: clamp(0px, 4vw, 72px);
+}
+
+.panel__header,
+.panel__footer,
+.tabs {
+  flex: none;
 }
 
 .panel__header {
@@ -1259,7 +1280,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: calc(32px + var(--safe-top)) calc(20px + var(--safe-right)) calc(32px + var(--safe-bottom)) calc(20px + var(--safe-left));
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.94) 100%);
   text-align: center;
@@ -1267,6 +1288,17 @@ a {
   visibility: hidden;
   overflow-y: auto;
   transition: opacity var(--t-slow) var(--ease), visibility 0s linear var(--t-slow);
+}
+
+/* Centered when there is room, scrollable from the top when there is not. */
+.credits > :first-child,
+.chapter > :first-child {
+  margin-top: auto;
+}
+
+.credits > :last-child,
+.chapter > :last-child {
+  margin-bottom: auto;
 }
 
 .credits.is-visible {
@@ -1353,7 +1385,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: calc(32px + var(--safe-top)) calc(22px + var(--safe-right)) calc(32px + var(--safe-bottom)) calc(22px + var(--safe-left));
   background: #000;
   text-align: center;
@@ -1367,6 +1399,13 @@ a {
   opacity: 1;
   visibility: visible;
   transition: opacity 1.2s var(--ease), visibility 0s;
+}
+
+.chapter__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .chapter__kicker {

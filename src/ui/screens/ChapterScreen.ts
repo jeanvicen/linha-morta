@@ -24,7 +24,7 @@ export class ChapterScreen extends Screen {
 
   constructor() {
     super();
-    this.body = h('div', { style: 'display:contents' });
+    this.body = h('div', { class: 'chapter__inner' });
     this.root = h('section', { class: 'chapter', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'chapter-title' }, this.body);
   }
 

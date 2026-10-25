@@ -80,7 +80,10 @@ export class ScreenManager {
 
   setBase(screen: Screen): void {
     while (this.stack.length) this.closeTop(false);
-    if (this.base && this.base !== screen) this.base.hide();
+    if (this.base && this.base !== screen) {
+      this.base.root.classList.remove('is-covered');
+      this.base.hide();
+    }
     this.base = screen;
     screen.show();
     this.applyShot();
@@ -93,6 +96,7 @@ export class ScreenManager {
     const current = this.top;
     if (current) this.focusMemory.set(current, document.activeElement as HTMLElement | null);
     this.stack.push(screen);
+    this.updateCovered();
     screen.show();
     this.applyShot();
     this.focus(screen);
@@ -116,6 +120,7 @@ export class ScreenManager {
     const screen = this.stack.pop();
     if (!screen) return;
     screen.hide();
+    this.updateCovered();
     this.hooks.onClose?.(screen);
     this.applyShot();
     const next = this.top;
@@ -126,6 +131,12 @@ export class ScreenManager {
         else this.focus(next);
       }, 30);
     }
+  }
+
+  /** The base screen fades out while an overlay is on top, so panels stay readable. */
+  private updateCovered(): void {
+    this.base?.root.classList.toggle('is-covered', this.stack.length > 0);
+    this.stack.forEach((s, i) => s.root.classList.toggle('is-covered', i < this.stack.length - 1));
   }
 
   private applyShot(): void {

@@ -83,6 +83,8 @@ export class GameInput {
     this.look.set(0, 0);
     this.stickVec.set(0, 0);
     this.run = this.interact = this.flashlight = this.pause = false;
+    // Buttons still held (e.g. the A press that closed the pause menu) must be released first.
+    this.padPrev = { a: true, y: true, start: true };
     if (this.knob) this.knob.style.transform = '';
   }
 
