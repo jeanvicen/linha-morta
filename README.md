@@ -309,7 +309,8 @@ tests/                       testes (configurações, salvamento, qualidade auto
 - Novo jogo, introdução do prólogo e prólogo:
   - objetivo e legendas;
   - andar até o carro, pegar a lanterna e ligar o rádio (checkpoint);
-  - pausar com Esc, "Salvar e voltar ao menu" e CONTINUAR habilitado com "Prólogo — O rádio".
+  - pausar com Esc, "Salvar e voltar ao menu" e CONTINUAR habilitado com "Prólogo — O rádio";
+  - a partir de um salvamento no checkpoint "A estrada": CONTINUAR, seguir pela estrada, aparição das luzes e tela "FIM DO PRÓLOGO".
 - Celular em retrato: menu centralizado, painel de configurações em tela cheia, controles de toque no prólogo.
 - Nenhum erro de console. Aparece só um aviso do WebGL por software sobre `KHR_parallel_shader_compile`.
 

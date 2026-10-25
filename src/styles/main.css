@@ -1780,3 +1780,29 @@ a {
   font-size: clamp(1.4rem, 3.5vw, 2.2rem);
   color: var(--text);
 }
+
+@media (max-height: 640px) {
+  .chapter__title {
+    margin: 0.3rem 0 0.2rem;
+    font-size: clamp(2rem, 6vh, 3rem);
+  }
+
+  .chapter__meta {
+    margin-bottom: 1rem;
+  }
+
+  .chapter__text {
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+
+  .chapter__controls {
+    margin-bottom: 1rem;
+    padding: 0.7rem 1rem;
+  }
+
+  .chapter__note {
+    margin-bottom: 1rem;
+  }
+}

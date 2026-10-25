@@ -436,11 +436,13 @@ export class Prologue {
     }
     if (this.lightsTriggered && !this.ending) {
       // Lights advance toward the player, faster when they look at them.
-      const lightsZ = this.world.lighting.scriptedDistant?.z ?? -230;
+      // Start far enough to feel distant but close enough to pierce the fog.
+      const lightsZ = this.world.lighting.scriptedDistant?.z ?? p.z - 105;
       this.player.forward(this.tmpF);
       const toward = this.tmpF.z < -0.6 ? 1.8 : 1;
-      const z = Math.min(lightsZ + dt * 11 * toward, p.z - 3);
-      this.world.lighting.scriptedDistant = { z, level: clamp((z + 230) / 60, 0.15, 1) * (1 + Math.max(0, 1 - (p.z - z) / 25) * 2) };
+      const z = Math.min(lightsZ + dt * 9 * toward, p.z - 3);
+      const distance = p.z - z;
+      this.world.lighting.scriptedDistant = { z, level: clamp(1.45 - distance / 100, 0.4, 1) * (1 + Math.max(0, 1 - distance / 25) * 2) };
       if (p.z - z < 9 || p.z < -118) void this.startEnding();
     }
     if (this.ending) this.endingTime += dt;
