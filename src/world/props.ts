@@ -417,10 +417,11 @@ export class Props {
 
   private buildBusShelter(concrete: Material): void {
     const shelter = new Group();
-    const p = roadPoint(-30, 8.2);
+    // Beyond the drainage ditch, open side facing the road.
+    const p = roadPoint(-30, 10.6);
     shelter.position.copy(p);
-    shelter.position.y = Math.max(p.y, 0.6) - 0.1;
-    shelter.rotation.y = roadHeading(-30) - Math.PI / 2;
+    shelter.position.y = p.y - 0.02;
+    shelter.rotation.y = roadHeading(-30) + Math.PI / 2;
     const slab = new Mesh(this.geo(new BoxGeometry(3.4, 0.12, 2.0)), concrete);
     slab.position.y = 2.4;
     const back = new Mesh(this.geo(new BoxGeometry(3.2, 2.4, 0.12)), concrete);
@@ -432,8 +433,9 @@ export class Props {
     s2.position.set(1.55, 1.2, 0.05);
     const bench = new Mesh(this.geo(new BoxGeometry(2.6, 0.08, 0.4)), concrete);
     bench.position.set(0, 0.48, 0.6);
-    const floor = new Mesh(this.geo(new BoxGeometry(3.4, 0.2, 2.2)), concrete);
-    floor.position.y = -0.05;
+    // Concrete base sunk into the slope so the shelter never floats over uneven ground.
+    const floor = new Mesh(this.geo(new BoxGeometry(3.6, 1.4, 2.4)), concrete);
+    floor.position.y = -0.62;
     for (const m of [slab, back, s1, s2, bench, floor]) {
       m.castShadow = true;
       m.receiveShadow = true;

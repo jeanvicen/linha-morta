@@ -78,7 +78,7 @@ export class MainMenu extends Screen {
   setContinue(available: boolean, description: string | null): void {
     this.continueBtn.disabled = !available;
     this.continueBtn.setAttribute('aria-disabled', String(!available));
-    this.continueNote.textContent = available ? (description ?? '') : 'Nenhum jogo salvo ainda';
+    this.continueNote.textContent = description ?? (available ? '' : 'Nenhum jogo salvo ainda');
   }
 
   setSound(state: AudioState): void {

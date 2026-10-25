@@ -426,7 +426,7 @@ export class Prologue {
   private updateStory(dt: number): void {
     const p = this.player.position;
     // The lights appear once the player commits to the road toward km 112.
-    if (!this.ending && this.checkpoint === 'road' && p.z < -78 && !this.lightsTriggered) {
+    if (!this.ending && p.z < -78 && !this.lightsTriggered) {
       this.lightsTriggered = true;
       this.world.setEventsEnabled(false);
       this.hud.say([

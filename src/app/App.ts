@@ -166,7 +166,8 @@ export class App {
   private refreshContinue(): void {
     const save = this.saves.load();
     const available = this.saves.hasValidSave();
-    this.menu.setContinue(available, available && save ? describeSave(save) : null);
+    const finished = save?.checkpoint === 'ending';
+    this.menu.setContinue(available, available && save ? describeSave(save) : finished ? 'Prólogo concluído · Capítulo 1 em desenvolvimento' : null);
   }
 
   // ------------------------------------------------------------------------------------------

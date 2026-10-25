@@ -286,18 +286,37 @@ tests/                       testes (configurações, salvamento, qualidade auto
 
 ## Testes executados
 
-- `npm run typecheck`: sem erros.
-- `npm run lint`: sem erros.
+**Verificações automáticas** (todas sem erros):
+- `npm run typecheck`;
+- `npm run lint`;
 - `npm test`: **55 testes passando**. Cobrem:
   - validação e persistência das configurações e predefinições de qualidade;
   - salvamento (validação e "nunca inventar progresso");
   - estimativa de qualidade por GPU;
   - API de ideias **com e sem** `IDEAS_WEBHOOK_URL` (sucesso só após confirmação, falha do destino, erro de rede, antispam, limite de tamanho, limite por IP, URL nunca exposta);
-  - chave PIX e créditos exatos.
-- `npm run build`: build de produção, manifest e service worker gerados.
-- Testes visuais em navegador (Chromium headless com WebGL por software): carregamento, menu, configurações, doação, ideias, créditos, retrato e paisagem, sem erros de console. Os resultados de cada rodada estão no histórico do projeto.
+  - chave PIX e créditos exatos;
+- `npm run build`: build de produção, manifest e service worker gerados;
+- `npm ci` com npm 10 validado contra o `package-lock.json` (o mesmo processo da Vercel).
 
----
+**Testes no navegador** (Chromium headless com WebGL por software, servindo o build de produção com `npm run preview`, ou seja, com a CSP e os cabeçalhos da Vercel ativos):
+- Carregamento até o menu sobre a cena 3D.
+- Configurações: abas e predefinições aplicadas de verdade.
+- Doar: cópia da chave PIX confirmada pela Clipboard API.
+- Enviar uma ideia:
+  - validação dos campos;
+  - estado "envio não configurado" detectado via `/api/ideas`, com o botão Enviar oculto.
+- Créditos.
+- Novo jogo, introdução do prólogo e prólogo:
+  - objetivo e legendas;
+  - andar até o carro, pegar a lanterna e ligar o rádio (checkpoint);
+  - pausar com Esc, "Salvar e voltar ao menu" e CONTINUAR habilitado com "Prólogo — O rádio".
+- Celular em retrato: menu centralizado, painel de configurações em tela cheia, controles de toque no prólogo.
+- Nenhum erro de console. Aparece só um aviso do WebGL por software sobre `KHR_parallel_shader_compile`.
+
+**Não foi possível testar aqui:**
+- desempenho em GPU real (o servidor não tem GPU; as predefinições Alta e Ultra são pesadas demais para o renderizador por software capturar tela);
+- som audível (navegador sem saída de áudio);
+- publicação real na Vercel.
 
 ## Limitações conhecidas
 
